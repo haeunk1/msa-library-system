@@ -1,0 +1,72 @@
+package com.example.memberservice.domain;
+
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import com.example.memberservice.domain.vo.LoginId;
+import com.example.memberservice.domain.vo.OrganizationId;
+import com.example.memberservice.domain.vo.Password;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Getter;
+
+@Entity
+@Getter
+@Table(name="member")
+public class Member {
+
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Long id;
+    
+    @Embedded
+    private LoginId loginId;
+
+    @Embedded
+    private Password password;
+
+    @Embedded
+    private OrganizationId organizationId;
+
+    private String name;
+
+    private boolean blocked;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime joinedDate;
+
+    protected Member(){}
+
+    public Member(String loginId, String password, Long organizationId, String name, Role role){
+        this.loginId = LoginId.of(loginId);
+        this.password = Password.of(password);
+        this.organizationId = OrganizationId.of(organizationId);
+        this.name = name;
+        this.blocked = false;
+        this.role = role;
+    }
+
+    public void changePassword(String currentPw, String newPw){
+        if(!this.password.isMatch(currentPw))
+            throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
+        this.password = Password.of(newPw);
+    }
+
+    public static Member of(String loginId, String password, Long organizationId, String name, Role role) {
+        return new Member(loginId, password, organizationId, name, role);
+    }
+
+}
