@@ -7,6 +7,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import com.example.memberservice.domain.vo.LoginId;
 import com.example.memberservice.domain.vo.OrganizationId;
 import com.example.memberservice.domain.vo.Password;
+import com.example.memberservice.presentation.exception.ErrorCode;
+import com.example.memberservice.presentation.exception.MemberException;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -61,8 +63,12 @@ public class Member {
 
     public void changePassword(String currentPw, String newPw){
         if(!this.password.isMatch(currentPw))
-            throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
+            throw new MemberException(ErrorCode.MEMBER_PASSWORD_MISMATCH);
         this.password = Password.of(newPw);
+    }
+
+    public void changeRole(Role role){
+        this.role = role;
     }
 
     public static Member of(String loginId, String password, Long organizationId, String name, Role role) {

@@ -5,6 +5,9 @@ import java.util.regex.Pattern;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import com.example.memberservice.presentation.exception.ErrorCode;
+import com.example.memberservice.presentation.exception.MemberException;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
@@ -31,7 +34,7 @@ public class Password {
 
     private static void validate(final String password) {
         if (Objects.isNull(password) || password.length() < 8) {
-            throw new IllegalArgumentException("비밀번호는 8자 이상이어야 합니다.");
+            throw new MemberException(ErrorCode.MEMBER_PASSWORD_TOO_SHORT);
         }
     }
 

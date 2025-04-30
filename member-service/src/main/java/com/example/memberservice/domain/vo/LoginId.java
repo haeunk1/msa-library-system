@@ -2,6 +2,9 @@ package com.example.memberservice.domain.vo;
 
 import java.util.Objects;
 
+import com.example.memberservice.presentation.exception.ErrorCode;
+import com.example.memberservice.presentation.exception.MemberException;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
@@ -16,8 +19,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @EqualsAndHashCode
 public class LoginId {
-    private static final int MIN_LENGTH = 4;
-    private static final int MAX_LENGTH = 12;
+    private static final int MIN_LENGTH = 5;
+    private static final int MAX_LENGTH = 20;
 
     @Column(nullable=false)
     private String loginId;
@@ -29,10 +32,10 @@ public class LoginId {
 
     private static void validate(String loginId) {
         if (Objects.isNull(loginId)) {
-            throw new IllegalArgumentException("loginId는 null일 수 없습니다.");
+            throw new MemberException(ErrorCode.MEMBER_LOGIN_ID_NULL);
         }
         if (loginId.length() < MIN_LENGTH || loginId.length() > MAX_LENGTH) {
-            throw new IllegalArgumentException("loginId 길이는 " + MIN_LENGTH + " ~ " + MAX_LENGTH + " 사이여야 합니다.");
+            throw new MemberException(ErrorCode.MEMBER_LOGIN_ID_LENGTH_INVALID);
         }
     }
 }

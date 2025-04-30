@@ -5,6 +5,9 @@ import org.springframework.stereotype.Service;
 import com.example.memberservice.application.dto.MemberRegisterRequest;
 import com.example.memberservice.domain.Member;
 import com.example.memberservice.domain.MemberRepository;
+import com.example.memberservice.domain.Role;
+import com.example.memberservice.presentation.exception.ErrorCode;
+import com.example.memberservice.presentation.exception.MemberException;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +24,7 @@ public class MemberService {
     public Long register(MemberRegisterRequest request){
 
         if(memberRepository.findByLoginId(request.loginId()).isPresent()){
-            throw new IllegalArgumentException("이미 사용 중인 로그인 ID입니다.");
+            throw new MemberException(ErrorCode.MEMBER_LOGIN_ID_ALREADY_EXIST);
         }
 
         Member member = Member.of(
@@ -36,8 +39,25 @@ public class MemberService {
 
     @Transactional
     public void changePassword(String loginId, String currentPw, String newPw){
-        Member member = memberRepository.findByLoginId(loginId).orElseThrow(() -> new IllegalArgumentException("Member not found"));
+        Member member = memberRepository.findByLoginId(loginId).orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
         member.changePassword(currentPw, newPw);
         memberRepository.save(member);
+    }
+
+    @Transactional
+    public void changeRole(Long memberId, Long targetId, Role role){
+        //1.memberId 권한체크
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
+        if(member.getRole() != Role.ADMIN){
+            throw new MemberException(ErrorCode.MEMBER_ROLE_CHANGE_FORBIDDEN);
+        }
+        //2.targetId 소속 확인
+        Member targetMember = memberRepository.findById(targetId).orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
+        if(!member.getOrganizationId().equals(targetMember.getOrganizationId())){
+            throw new MemberException(ErrorCode.MEMBER_ORGANIZATION_MISMATCH);
+        }
+        //3.변경
+        targetMember.changeRole(role);
+        memberRepository.save(targetMember);//targetMember 영속상태, 생략가능
     }
 }
