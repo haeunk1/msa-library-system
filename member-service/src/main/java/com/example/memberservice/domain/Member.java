@@ -75,4 +75,8 @@ public class Member {
         return new Member(loginId, password, organizationId, name, role);
     }
 
+    public boolean isPasswordMatch(String rawPassword) {
+        return this.password.isMatch(rawPassword);
+    }
+
 }

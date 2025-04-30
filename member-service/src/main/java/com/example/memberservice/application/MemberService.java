@@ -2,7 +2,10 @@ package com.example.memberservice.application;
 
 import org.springframework.stereotype.Service;
 
+import com.example.memberservice.application.dto.LoginRequest;
+import com.example.memberservice.application.dto.LoginResponse;
 import com.example.memberservice.application.dto.MemberRegisterRequest;
+import com.example.memberservice.config.jwt.JwtProvider;
 import com.example.memberservice.domain.Member;
 import com.example.memberservice.domain.MemberRepository;
 import com.example.memberservice.domain.Role;
@@ -19,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
-
+    private final JwtProvider jwtProvider;
     @Transactional
     public Long register(MemberRegisterRequest request){
 
@@ -59,5 +62,18 @@ public class MemberService {
         //3.변경
         targetMember.changeRole(role);
         memberRepository.save(targetMember);//targetMember 영속상태, 생략가능
+    }
+
+    @Transactional
+    public LoginResponse login(LoginRequest request) {
+        Member member = memberRepository.findByLoginId(request.loginId())
+            .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
+
+        if (!member.isPasswordMatch(request.password())) {
+            throw new MemberException(ErrorCode.MEMBER_PASSWORD_MISMATCH);
+        }
+
+        String token = jwtProvider.generateAccessToken(member.getId(), member.getName());
+        return new LoginResponse(token);
     }
 }

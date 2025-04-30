@@ -17,7 +17,7 @@ public enum ErrorCode {
     MEMBER_LOGIN_ID_ALREADY_EXIST("MEMBER0005", "이미 존재하는 ID입니다."),
     MEMBER_ROLE_CHANGE_FORBIDDEN("MEMBER0006", "회원의 역할을 변경할 권한이 없습니다."),
     MEMBER_PASSWORD_MISMATCH("MEMBER0007", "현재 비밀번호가 일치하지 않습니다."),
-    MEMBER_ORGANIZATION_MISMATCH("MEMBER0008", "다른 조직의 회원은 수정할 수 없습니다.");
+    MEMBER_ORGANIZATION_MISMATCH("MEMBER0008", "다른 조직의 회원은 수정할 수 없습니다."),
     ;
     private final String code;
     private final String message;

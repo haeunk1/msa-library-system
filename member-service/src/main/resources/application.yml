@@ -32,3 +32,11 @@ spring:
     hibernate:
       ddl-auto: create-drop   # 서버 시작할 때 테이블 생성, 종료할 때 삭제
     show-sql: true
+
+
+# JWT 설정
+jwt:
+  jwtSecret: vdsf98WEDj2923ksdFWEj239wDEfw293DFWWeijrFwEDjfFWE123123123123123
+  jwtExpirationMs: 3600000 # 1시간 (밀리초 단위)
+  jwtRefreshExpirationMs: 86400000 # 24시간 (밀리초 단위)
+  refreshTokenDurationMinutes: 1440 # 24시간 (분 단위)

@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.memberservice.application.MemberService;
+import com.example.memberservice.application.dto.LoginRequest;
+import com.example.memberservice.application.dto.LoginResponse;
 import com.example.memberservice.application.dto.MemberRegisterRequest;
 
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,11 @@ public class MemberController {
     private ResponseEntity<Long> register(@RequestBody MemberRegisterRequest request){
         Long memberId = memberservice.register(request);
         return ResponseEntity.ok(memberId);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+        return ResponseEntity.ok(memberservice.login(request));
     }
 
     @GetMapping("/test")
