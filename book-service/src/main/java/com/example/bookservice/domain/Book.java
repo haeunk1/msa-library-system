@@ -8,7 +8,9 @@ import java.util.Set;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import com.example.bookservice.application.port.in.Command.RegisterBookCommand;
 
+import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -45,6 +47,7 @@ public class Book implements Serializable {
     private String publisher;
 
     @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "isbn", unique = true))
     private ISBN isbn;
 
     @Column(nullable = false)
@@ -62,8 +65,9 @@ public class Book implements Serializable {
 
     protected Book (){}
 
-    public Book(String title, String author, String publisher, String isbn
+    public Book(Long organizationId, String title, String author, String publisher, String isbn
     , LocalDate publicationDate, Set<BookCategory> categories, BookStatus bookStatus, String location){
+        this.organizationId = organizationId;
         this.title = title;
         this.author = author;
         this.publisher = publisher;
@@ -75,13 +79,21 @@ public class Book implements Serializable {
         assertValidCategories();
     }
 
-    public static Book of(String title, String author, String publisher, String isbn
-    , LocalDate publicationDate, Set<BookCategory> categories, BookStatus bookStatus, String location){
-        return new Book(title, author, publisher, isbn, publicationDate, categories, bookStatus, location);
+    public static Book of(RegisterBookCommand command){
+        return new Book(
+            command.organizationId(),
+            command.title(), 
+            command.author(), 
+            command.publisher(), 
+            command.isbn(), 
+            command.publicationDate(), 
+            command.categories(), 
+            command.bookStatus(), 
+            command.location());
     }
 
-    public void updateCategories(Set<String> categoryNames) {
-        this.categories = BookCategory.of(categoryNames);
+    public void updateCategories(Set<BookCategory> categoryNames) {
+        this.categories = categoryNames;
         assertValidCategories();
     }
 
@@ -93,5 +105,9 @@ public class Book implements Serializable {
 
     public void changeBookStatus(BookStatus bookStatus){
         this.bookStatus = bookStatus;
+    }
+
+    public void changeBookLocation(String location){
+        this.location = location;
     }
 }

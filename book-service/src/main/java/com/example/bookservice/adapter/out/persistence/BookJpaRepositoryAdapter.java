@@ -1,5 +1,7 @@
 package com.example.bookservice.adapter.out.persistence;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Repository;
 
 import com.example.bookservice.application.port.out.BookRepository;
@@ -14,5 +16,9 @@ public class BookJpaRepositoryAdapter implements BookRepository{
     @Override
     public Book save(Book book) {
         return jpaRepository.save(book);
+    }
+    @Override
+    public Optional<Book> findByIsbn(String isbn) {
+        return jpaRepository.findByIsbn(isbn);
     }
 }

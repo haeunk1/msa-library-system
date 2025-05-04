@@ -4,10 +4,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import jakarta.persistence.Embeddable;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Embeddable
 @Getter
+@EqualsAndHashCode
 public class BookCategory {
     String name;
 
