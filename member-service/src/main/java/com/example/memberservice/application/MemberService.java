@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import com.example.memberservice.application.dto.LoginRequest;
 import com.example.memberservice.application.dto.LoginResponse;
 import com.example.memberservice.application.dto.MemberRegisterRequest;
+import com.example.memberservice.application.dto.MemberResponse;
 import com.example.memberservice.config.jwt.JwtProvider;
 import com.example.memberservice.domain.Member;
 import com.example.memberservice.domain.MemberRepository;
@@ -75,5 +76,11 @@ public class MemberService {
 
         String token = jwtProvider.generateAccessToken(member.getId(), member.getName());
         return new LoginResponse(token);
+    }
+
+    @Transactional
+    public MemberResponse getMemberInfo(Long memberId){
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
+        return new MemberResponse(member.getId(), member.getOrganizationId().getOrganizationId(), member.getLoginId().getLoginId(), member.getRole(), member.getName(), member.isBlocked());
     }
 }

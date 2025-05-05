@@ -47,7 +47,7 @@ public class Book implements Serializable {
     private String publisher;
 
     @Embedded
-    @AttributeOverride(name = "value", column = @Column(name = "isbn", unique = true))
+    @AttributeOverride(name = "isbn", column = @Column(name = "isbn", unique = true))
     private ISBN isbn;
 
     @Column(nullable = false)

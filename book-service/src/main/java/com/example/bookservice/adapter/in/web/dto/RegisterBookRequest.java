@@ -8,27 +8,20 @@ import com.example.bookservice.domain.BookCategory;
 import com.example.bookservice.domain.BookStatus;
 
 public record RegisterBookRequest (
+    Long memberId,
     Long organizationId,
-
     String title,
-
     String author,
-
     String publisher,
-
     String isbn,
-
     String publicationDate,
-
     Set<String> categories,
-
     String bookStatus,
-
     String location
-
 ){
     public RegisterBookCommand toCommand() {
     return new RegisterBookCommand(
+        memberId,
         organizationId,
         title,
         author,

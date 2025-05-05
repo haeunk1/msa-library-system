@@ -1,24 +1,34 @@
 package com.example.bookservice.application.service;
 
 import com.example.bookservice.application.port.out.BookRepository;
+import com.example.bookservice.application.service.feign.MemberFeignClient;
+import com.example.bookservice.application.service.feign.MemberFeignResponse;
 import com.example.bookservice.domain.Book;
 import com.example.bookservice.domain.BookStatus;
 
 import lombok.RequiredArgsConstructor;
 
-import org.h2.api.ErrorCode;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.bookservice.application.port.in.BookUseCase;
 import com.example.bookservice.application.port.in.Command.RegisterBookCommand;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class BookService implements BookUseCase{
     private final BookRepository bookRepository;
+    private final MemberFeignClient memberFeignClient;
 
     @Override
     public Long register(RegisterBookCommand command) {
+        MemberFeignResponse memberFeignResponse = memberFeignClient.getMemberInfo(command.memberId());
+        String role = memberFeignResponse.role();
+        if(!"ADMIN".equals(role)){
+            throw new IllegalArgumentException("권한이 없습니다.");
+        }
+
         bookRepository.findByIsbn(command.isbn())
         .ifPresent(b -> {
             throw new IllegalArgumentException("이미 등록된 ISBN입니다: " + b.getIsbn());

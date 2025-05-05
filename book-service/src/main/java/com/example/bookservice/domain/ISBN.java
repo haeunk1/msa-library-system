@@ -14,23 +14,23 @@ public class ISBN {
     private static final Pattern ISBN13_PATTERN = Pattern.compile("^97[89]\\d{10}$");
 
     @Column(name = "isbn", nullable = false, unique = true, length = 13)
-    private String value;
+    private String isbn;
 
     protected ISBN() { }
 
-    private ISBN(String value) {
-        if (!isValid(value)) {
-            throw new InvalidIsbnException(value);
+    private ISBN(String isbn) {
+        if (!isValid(isbn)) {
+            throw new InvalidIsbnException(isbn);
         }
-        this.value = value;
+        this.isbn = isbn;
     }
 
-    public static ISBN of(String value) {
-        return new ISBN(value.replaceAll("-", ""));
+    public static ISBN of(String isbn) {
+        return new ISBN(isbn.replaceAll("-", ""));
     }
 
     public String getValue() {
-        return value;
+        return isbn;
     }
 
     private boolean isValid(String isbn) {

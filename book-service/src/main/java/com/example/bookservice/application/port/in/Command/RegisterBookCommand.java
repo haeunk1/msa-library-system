@@ -8,6 +8,7 @@ import com.example.bookservice.domain.BookStatus;
 
 
 public record RegisterBookCommand(
+    Long memberId,
     Long organizationId,
     String title,
     String author,

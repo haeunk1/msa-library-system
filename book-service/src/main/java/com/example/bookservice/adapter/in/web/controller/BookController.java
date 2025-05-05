@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.example.bookservice.adapter.in.web.dto.RegisterBookRequest;
 
@@ -20,7 +21,7 @@ public class BookController {
     private final BookUseCase bookUseCase;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(RegisterBookRequest request){
+    public ResponseEntity<String> register(@RequestBody RegisterBookRequest request){
         try {
             RegisterBookCommand command = request.toCommand();
             Long bookId = bookUseCase.register(command);
