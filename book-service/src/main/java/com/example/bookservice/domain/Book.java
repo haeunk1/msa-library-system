@@ -105,11 +105,11 @@ public class Book implements Serializable {
         }
     }
 
-    public void changeBookStatus(BookStatus bookStatus){
+    public void updateBookStatus(BookStatus bookStatus){
         this.bookStatus = bookStatus;
     }
 
-    public void changeBookLocation(String location){
+    public void updateBookLocation(String location){
         this.location = location;
     }
 }

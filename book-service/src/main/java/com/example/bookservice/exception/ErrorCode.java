@@ -15,7 +15,9 @@ public enum ErrorCode {
     BOOK_NOT_FOUND("BOOK0003", "존재하지 않는 도서입니다."),
     BOOK_ISBN_INVALID("BOOK0004", "유효하지 않은 ISBN입니다."),
     BOOK_CATEGORY_REQUIRED("BOOK0005", "하나 이상의 카테고리가 입력되어야 합니다."),
-    BOOK_CATEGORY_NAME_EMPTY("BOOK0006", "카테고리 이름은 비어 있을 수 없습니다.");
+    BOOK_CATEGORY_NAME_EMPTY("BOOK0006", "카테고리 이름은 비어 있을 수 없습니다."),
+    BOOK_UPDATE_INFO_NOT_CORRECT("BOOK0007", "입력된 정보가 정확하지 않습니다."),
+    BOOK_DIFFRENT_ORGANIZATION("BOOK0008", "도서의 소속이 다릅니다."),
     ;
     private final String code;
     private final String message;

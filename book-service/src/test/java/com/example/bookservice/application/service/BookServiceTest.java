@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import com.example.bookservice.application.port.in.BookUseCase;
 import com.example.bookservice.application.port.in.Command.RegisterBookCommand;
+import com.example.bookservice.application.port.in.Command.UpdateBookCommand;
 import com.example.bookservice.application.port.out.BookRepository;
 import com.example.bookservice.application.service.feign.MemberFeignClient;
 import com.example.bookservice.application.service.feign.MemberFeignResponse;
@@ -57,6 +58,10 @@ public class BookServiceTest {
                 "서울 도서관 2층 A열" 
             );
     }
+    private UpdateBookCommand getSampleBookUpdate(){
+        return new UpdateBookCommand(1L, 1L, 1L, 
+        BookStatus.AVAILABLE, Set.of("PROGRAMMING", "JAVA"), "서울 도서관 2층 A열" );
+    }
 
     @Nested
     class 도서_등록{
@@ -92,6 +97,27 @@ public class BookServiceTest {
                 bookService.register(bookCommand);
             });
             assertEquals(ErrorCode.BOOK_ROLE_UNAUTHORIZED.getMessage(), exception.getMessage());
+        }
+    }
+
+    @Nested
+    class 도서_정보_수정{
+        @Test
+        void 도서_위치_수정_성공(){
+            //given
+            UpdateBookCommand bookCommand = getSampleBookUpdate();
+
+            //when
+            bookService.updateBookLocation(bookCommand);
+            //then
+        }
+        @Test
+        void 도서_수정_정보가_null이면_에러를_던진다(){
+
+        }
+        @Test
+        void 도서_소속_정보가_다르면_에러를_던진다(){
+
         }
     }
 

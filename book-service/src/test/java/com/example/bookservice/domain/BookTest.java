@@ -67,7 +67,7 @@ public class BookTest {
     @Test
     void 도서_상태_변경_성공(){
         Book book = getSampleBook();
-        book.changeBookStatus(BookStatus.DAMAGED);
+        book.updateBookStatus(BookStatus.DAMAGED);
 
         assertEquals(book.getBookStatus(),BookStatus.DAMAGED);
     }

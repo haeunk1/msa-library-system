@@ -21,4 +21,10 @@ public class BookJpaRepositoryAdapter implements BookRepository{
     public Optional<Book> findByIsbn(String isbn) {
         return jpaRepository.findByIsbn(isbn);
     }
+    @Override
+    public Optional<Book> findById(Long id) {
+        return jpaRepository.findById(id);
+    }
+
+    
 }
