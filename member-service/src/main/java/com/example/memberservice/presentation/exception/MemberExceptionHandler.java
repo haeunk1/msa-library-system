@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestControllerAdvice
 public class MemberExceptionHandler {
     @ExceptionHandler(MemberException.class)
-    public ResponseEntity<ErrorResponse> handleSurveyException(MemberException ex) {
+    public ResponseEntity<ErrorResponse> handleException(MemberException ex) {
         ErrorCode errorCode = ex.getErrorCode();
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST) // 또는 errorCode에 상태코드 필드를 추가
