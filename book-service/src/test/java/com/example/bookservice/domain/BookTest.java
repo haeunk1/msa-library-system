@@ -9,7 +9,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
-import com.example.bookservice.domain.exception.InvalidIsbnException;
+import com.example.bookservice.exception.BookException;
 public class BookTest {
     private Book getSampleBook(){
         return new Book(
@@ -27,7 +27,7 @@ public class BookTest {
   
     @Test
     void 생성시_카테고리가_없으면_에러를_던진다() {
-        assertThrows(IllegalArgumentException.class, ()-> new Book(
+        assertThrows(BookException.class, ()-> new Book(
             1L,
             "test title",
             "test author",
@@ -42,7 +42,7 @@ public class BookTest {
 
     @Test 
     void ISBN_형식이_맞지_않으면_에러를_던진다(){
-        assertThrows(InvalidIsbnException.class, ()-> new Book(
+        assertThrows(BookException.class, ()-> new Book(
             1L,
             "test title",
             "test author",

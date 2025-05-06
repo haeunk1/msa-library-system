@@ -9,6 +9,8 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.example.bookservice.application.port.in.Command.RegisterBookCommand;
+import com.example.bookservice.exception.BookException;
+import com.example.bookservice.exception.ErrorCode;
 
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.CollectionTable;
@@ -99,7 +101,7 @@ public class Book implements Serializable {
 
     protected void assertValidCategories() {
         if (categories == null || categories.isEmpty()){
-            throw new IllegalArgumentException("하나 이상의 카테고리가 입력되어야 합니다.");
+            throw new BookException(ErrorCode.BOOK_CATEGORY_REQUIRED);
         }
     }
 

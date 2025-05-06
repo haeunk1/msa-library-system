@@ -2,7 +2,8 @@ package com.example.bookservice.domain;
 
 import java.util.regex.Pattern;
 
-import com.example.bookservice.domain.exception.InvalidIsbnException;
+import com.example.bookservice.exception.BookException;
+import com.example.bookservice.exception.ErrorCode;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -20,7 +21,7 @@ public class ISBN {
 
     private ISBN(String isbn) {
         if (!isValid(isbn)) {
-            throw new InvalidIsbnException(isbn);
+            throw new BookException(ErrorCode.BOOK_ISBN_INVALID);
         }
         this.isbn = isbn;
     }

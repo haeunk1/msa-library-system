@@ -3,6 +3,9 @@ package com.example.bookservice.domain;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.example.bookservice.exception.BookException;
+import com.example.bookservice.exception.ErrorCode;
+
 import jakarta.persistence.Embeddable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -17,7 +20,7 @@ public class BookCategory {
 
     public BookCategory(String name){
         if(name == null || name.isBlank()){
-            throw new IllegalArgumentException("카테고리 이름은 비어 있을 수 없습니다.");
+            throw new BookException(ErrorCode.BOOK_CATEGORY_NAME_EMPTY);
         }
         this.name = name;
     }

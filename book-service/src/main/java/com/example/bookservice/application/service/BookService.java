@@ -5,6 +5,8 @@ import com.example.bookservice.application.service.feign.MemberFeignClient;
 import com.example.bookservice.application.service.feign.MemberFeignResponse;
 import com.example.bookservice.domain.Book;
 import com.example.bookservice.domain.BookStatus;
+import com.example.bookservice.exception.ErrorCode;
+import com.example.bookservice.exception.BookException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,12 +28,12 @@ public class BookService implements BookUseCase{
         MemberFeignResponse memberFeignResponse = memberFeignClient.getMemberInfo(command.memberId());
         String role = memberFeignResponse.role();
         if(!"ADMIN".equals(role)){
-            throw new IllegalArgumentException("권한이 없습니다.");
+            throw new BookException(ErrorCode.BOOK_ROLE_UNAUTHORIZED);
         }
 
         bookRepository.findByIsbn(command.isbn())
         .ifPresent(b -> {
-            throw new IllegalArgumentException("이미 등록된 ISBN입니다: " + b.getIsbn());
+            throw new BookException(ErrorCode.BOOK_ISBN_ALREADY_EXIST);
         });
 
         Book newBook = Book.of(command);
@@ -40,14 +42,14 @@ public class BookService implements BookUseCase{
 
     @Override
     public void changeBookStatus(String isbn, BookStatus bookstatus) {
-        Book book = bookRepository.findByIsbn(isbn).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 도서입니다."));
+        Book book = bookRepository.findByIsbn(isbn).orElseThrow(() -> new BookException(ErrorCode.BOOK_NOT_FOUND));
         book.changeBookStatus(bookstatus);
         bookRepository.save(book);
     }
 
     @Override
     public void changeBookLocation(String isbn,String location) {
-        Book book = bookRepository.findByIsbn(isbn).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 도서입니다."));
+        Book book = bookRepository.findByIsbn(isbn).orElseThrow(() -> new BookException(ErrorCode.BOOK_NOT_FOUND));
         book.changeBookLocation(location);
         bookRepository.save(book);
     }
