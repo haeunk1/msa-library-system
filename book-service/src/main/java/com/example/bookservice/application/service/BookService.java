@@ -55,7 +55,7 @@ public class BookService implements BookUseCase{
 
     @Override
     public void updateBookStatus(UpdateBookCommand command) {
-        if(command.memberId() == null && command.bookId() == null && command.bookStatus() == null){
+        if(command.memberId() == null || command.bookId() == null || command.bookStatus() == null){
             throw new BookException(ErrorCode.BOOK_UPDATE_INFO_NOT_CORRECT);
         }
         validateAdmin(command.memberId(),command.organizationId());
@@ -67,7 +67,7 @@ public class BookService implements BookUseCase{
 
     @Override
     public void updateBookLocation(UpdateBookCommand command) {
-        if(command.memberId() == null && command.bookId() == null && command.location() == null){
+        if(command.memberId() == null || command.bookId() == null || command.location() == null){
             throw new BookException(ErrorCode.BOOK_UPDATE_INFO_NOT_CORRECT);
         }
         validateAdmin(command.memberId(),command.organizationId());
@@ -79,7 +79,7 @@ public class BookService implements BookUseCase{
 
     @Override
     public void updateBookCategory(UpdateBookCommand command){
-        if(command.memberId() == null && command.bookId() == null && command.categories() == null){
+        if(command.memberId() == null || command.bookId() == null || command.categories() == null){
             throw new BookException(ErrorCode.BOOK_UPDATE_INFO_NOT_CORRECT);
         }
         validateAdmin(command.memberId(),command.organizationId());

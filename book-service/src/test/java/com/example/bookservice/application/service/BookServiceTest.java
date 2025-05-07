@@ -58,9 +58,8 @@ public class BookServiceTest {
                 "서울 도서관 2층 A열" 
             );
     }
-    private UpdateBookCommand getSampleBookUpdate(){
-        return new UpdateBookCommand(1L, 1L, 1L, 
-        BookStatus.AVAILABLE, Set.of("PROGRAMMING", "JAVA"), "서울 도서관 2층 A열" );
+    private MemberFeignResponse getMemberInfo(){
+        return new MemberFeignResponse(1L,1L,"testId","ADMIN","testName",true);
     }
 
     @Nested
@@ -71,7 +70,8 @@ public class BookServiceTest {
             RegisterBookCommand bookCommand = getSampleBook();
             Book savedBook = Book.of(bookCommand);
             ReflectionTestUtils.setField(savedBook, "id", 1L);//수동으로 지정.
-            MemberFeignResponse mockMember = new MemberFeignResponse(1L,1L,"testId","ADMIN","testName",true);
+            MemberFeignResponse mockMember = getMemberInfo();
+
             when(memberFeignClient.getMemberInfo(1L)).thenReturn(mockMember);
             when(bookRepository.findByIsbn(bookCommand.isbn())).thenReturn(Optional.empty());
 
@@ -105,19 +105,47 @@ public class BookServiceTest {
         @Test
         void 도서_위치_수정_성공(){
             //given
-            UpdateBookCommand bookCommand = getSampleBookUpdate();
+            RegisterBookCommand newBookCommand = getSampleBook();
+            UpdateBookCommand updateBookInfoCommand = new UpdateBookCommand(1L, 1L, 1L, 
+            BookStatus.AVAILABLE, Set.of("PROGRAMMING", "JAVA"), "서울 도서관 2층 B열" );
+            MemberFeignResponse mockMember = getMemberInfo();
+
+            Book savedBook = Book.of(newBookCommand);
+            ReflectionTestUtils.setField(savedBook, "id", 1L);
+
+            when(memberFeignClient.getMemberInfo(1L)).thenReturn(mockMember);
+            when(bookRepository.findById(1L)).thenReturn(Optional.of(savedBook));
 
             //when
-            bookService.updateBookLocation(bookCommand);
+            bookService.updateBookLocation(updateBookInfoCommand);
+
             //then
+            assertEquals(updateBookInfoCommand.location(), savedBook.getLocation());
+            verify(bookRepository).save(savedBook);
         }
         @Test
         void 도서_수정_정보가_null이면_에러를_던진다(){
-
+            //given
+            UpdateBookCommand updateBookInfoCommand = new UpdateBookCommand(1L, 1L, 1L, 
+            BookStatus.AVAILABLE, Set.of("PROGRAMMING", "JAVA"), null);
+            //when&then
+            BookException exception = assertThrows(BookException.class,() -> {
+                bookService.updateBookLocation(updateBookInfoCommand);
+            });
+            assertEquals(ErrorCode.BOOK_UPDATE_INFO_NOT_CORRECT.getMessage(), exception.getMessage());
         }
         @Test
-        void 도서_소속_정보가_다르면_에러를_던진다(){
-
+        void 도서_변경시시_소속_정보가_다르면_에러를_던진다(){
+            //given
+            MemberFeignResponse mockMember = getMemberInfo();
+            UpdateBookCommand updateBookInfoCommand = new UpdateBookCommand(1L, 2L, 1L, 
+            BookStatus.AVAILABLE, Set.of("PROGRAMMING", "JAVA"), null);
+            when(memberFeignClient.getMemberInfo(1L)).thenReturn(mockMember);
+            //when&then
+            BookException exception = assertThrows(BookException.class,() -> {
+                bookService.updateBookCategory(updateBookInfoCommand);
+            });
+            assertEquals(ErrorCode.BOOK_DIFFRENT_ORGANIZATION.getMessage(), exception.getMessage());
         }
     }
 
