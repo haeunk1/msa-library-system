@@ -8,9 +8,11 @@ import com.example.bookservice.exception.ErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 @Embeddable
 @EqualsAndHashCode
+@Getter
 public class ISBN {
     private static final Pattern ISBN13_PATTERN = Pattern.compile("^97[89]\\d{10}$");
 
@@ -28,10 +30,6 @@ public class ISBN {
 
     public static ISBN of(String isbn) {
         return new ISBN(isbn.replaceAll("-", ""));
-    }
-
-    public String getValue() {
-        return isbn;
     }
 
     private boolean isValid(String isbn) {

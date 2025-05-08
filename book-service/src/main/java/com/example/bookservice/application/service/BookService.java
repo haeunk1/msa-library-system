@@ -1,11 +1,13 @@
 package com.example.bookservice.application.service;
 
+import com.example.bookservice.application.port.out.BookMessagePort;
 import com.example.bookservice.application.port.out.BookRepository;
 import com.example.bookservice.application.service.feign.MemberFeignClient;
 import com.example.bookservice.application.service.feign.MemberFeignResponse;
 import com.example.bookservice.domain.Book;
 import com.example.bookservice.domain.BookCategory;
 import com.example.bookservice.domain.BookStatus;
+import com.example.bookservice.domain.event.BookCreatedMessage;
 import com.example.bookservice.exception.ErrorCode;
 import com.example.bookservice.exception.BookException;
 
@@ -16,6 +18,7 @@ import java.util.Set;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.bookservice.adapter.out.messaging.BookCreatedKafkaProducer;
 import com.example.bookservice.application.port.in.BookUseCase;
 import com.example.bookservice.application.port.in.Command.RegisterBookCommand;
 import com.example.bookservice.application.port.in.Command.UpdateBookCommand;
@@ -26,6 +29,7 @@ import com.example.bookservice.application.port.in.Command.UpdateBookCommand;
 public class BookService implements BookUseCase{
     private final BookRepository bookRepository;
     private final MemberFeignClient memberFeignClient;
+    private final BookMessagePort bookMessagePort;
 
     // 권한체크 & 소속체크
     private void validateAdmin(Long memberId, Long organizationId) {
@@ -50,7 +54,10 @@ public class BookService implements BookUseCase{
         });
 
         Book newBook = Book.of(command);
-        return bookRepository.save(newBook).getId();
+        Long rtnId = bookRepository.save(newBook).getId();
+        BookCreatedMessage message = BookCreatedMessage.from(newBook);
+        bookMessagePort.send(message);
+        return rtnId;
     }
 
     @Override

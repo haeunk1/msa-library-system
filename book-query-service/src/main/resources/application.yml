@@ -4,6 +4,10 @@ server:
 spring:
   application:
     name: book-query-service
+  data:
+    mongodb:
+      uri: mongodb://mongo:mongo@localhost:27017
+      database: bookquerydb
 
 eureka:
   instance:
