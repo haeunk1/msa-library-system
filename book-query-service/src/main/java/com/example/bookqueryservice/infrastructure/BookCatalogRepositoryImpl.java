@@ -20,21 +20,21 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BookCatalogRepositoryImpl implements BookCatalogRepository{
 
-    private final BookCatalogJpaRepository jpaRepository;
+    private final BookCatalogMongoRepository mongoRepository;
 
     @Override
     public Page<BookCatalog> findByTitleContaining(String title, Pageable pageable) {
-        return jpaRepository.findByTitleContaining(title, pageable);
+        return mongoRepository.findByTitleContaining(title, pageable);
     }
 
     @Override
     public List<BookCatalog> findTop10ByOrderByRentCntDesc() {
-        return jpaRepository.findTop10ByOrderByRentCntDesc();
+        return mongoRepository.findTop10ByOrderByRentCntDesc();
     }
 
     @Override
     public void save(BookCatalog bookCatalog){
-        jpaRepository.save(bookCatalog);
+        mongoRepository.save(bookCatalog);
     }
 
 

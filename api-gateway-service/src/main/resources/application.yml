@@ -19,6 +19,10 @@ spring:
             - Path=/api/book/**
           filters:
             - name: JwtAuthFilter
+        - id: book-query-service
+          uri: lb://book-query-service
+          predicates:
+            - Path=/api/book-query/**
   #     default-filters:
   #       - name : GlobalAuthFilter
   session:

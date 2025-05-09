@@ -16,7 +16,7 @@ import com.example.bookqueryservice.application.dto.BookCatalogResponse;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/bookCatalog")
+@RequestMapping("/api/book-query")
 @RequiredArgsConstructor
 public class BookCatalogController {
     private final BookCatalogService bookCatalogService;
