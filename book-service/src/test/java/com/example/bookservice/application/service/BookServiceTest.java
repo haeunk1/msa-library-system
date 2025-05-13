@@ -22,12 +22,14 @@ import static org.mockito.ArgumentMatchers.any;
 import com.example.bookservice.application.port.in.BookUseCase;
 import com.example.bookservice.application.port.in.Command.RegisterBookCommand;
 import com.example.bookservice.application.port.in.Command.UpdateBookCommand;
+import com.example.bookservice.application.port.out.BookMessagePort;
 import com.example.bookservice.application.port.out.BookRepository;
 import com.example.bookservice.application.service.feign.MemberFeignClient;
 import com.example.bookservice.application.service.feign.MemberFeignResponse;
 import com.example.bookservice.domain.Book;
 import com.example.bookservice.domain.BookCategory;
 import com.example.bookservice.domain.BookStatus;
+import com.example.bookservice.domain.ISBN;
 import com.example.bookservice.exception.BookException;
 import com.example.bookservice.exception.ErrorCode;
 
@@ -41,6 +43,9 @@ public class BookServiceTest {
     @Mock
     private MemberFeignClient memberFeignClient;
 
+    @Mock
+    private BookMessagePort bookMessagePort;
+    
     @InjectMocks
     private BookService bookService;
 
@@ -51,7 +56,7 @@ public class BookServiceTest {
                 "test title",
                 "test author",
                 "test publisher",
-                "979-11-963936-5-6",
+                ISBN.of("979-11-963936-5-6"),
                 LocalDate.parse("2021-05-01"),
                 BookCategory.of(Set.of("PROGRAMMING", "JAVA")),
                 BookStatus.AVAILABLE, 

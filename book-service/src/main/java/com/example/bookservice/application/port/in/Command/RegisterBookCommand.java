@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.example.bookservice.domain.BookCategory;
 import com.example.bookservice.domain.BookStatus;
+import com.example.bookservice.domain.ISBN;
 
 
 public record RegisterBookCommand(
@@ -13,7 +14,7 @@ public record RegisterBookCommand(
     String title,
     String author,
     String publisher,
-    String isbn,
+    ISBN isbn,
     LocalDate publicationDate,
     Set<BookCategory> categories,
     BookStatus bookStatus,

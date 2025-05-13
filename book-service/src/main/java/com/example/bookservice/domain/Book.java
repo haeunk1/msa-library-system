@@ -67,13 +67,13 @@ public class Book implements Serializable {
 
     protected Book (){}
 
-    public Book(Long organizationId, String title, String author, String publisher, String isbn
+    public Book(Long organizationId, String title, String author, String publisher, ISBN isbn
     , LocalDate publicationDate, Set<BookCategory> categories, BookStatus bookStatus, String location){
         this.organizationId = organizationId;
         this.title = title;
         this.author = author;
         this.publisher = publisher;
-        this.isbn = ISBN.of(isbn);
+        this.isbn = isbn;
         this.publicationDate = publicationDate;
         this.categories = categories;
         this.bookStatus = bookStatus;

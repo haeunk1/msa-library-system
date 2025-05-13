@@ -7,6 +7,7 @@ import com.example.bookservice.application.service.feign.MemberFeignResponse;
 import com.example.bookservice.domain.Book;
 import com.example.bookservice.domain.BookCategory;
 import com.example.bookservice.domain.BookStatus;
+import com.example.bookservice.domain.ISBN;
 import com.example.bookservice.domain.event.BookCreatedMessage;
 import com.example.bookservice.exception.ErrorCode;
 import com.example.bookservice.exception.BookException;
@@ -18,7 +19,6 @@ import java.util.Set;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.bookservice.adapter.out.messaging.BookCreatedKafkaProducer;
 import com.example.bookservice.application.port.in.BookUseCase;
 import com.example.bookservice.application.port.in.Command.RegisterBookCommand;
 import com.example.bookservice.application.port.in.Command.UpdateBookCommand;
@@ -47,7 +47,7 @@ public class BookService implements BookUseCase{
     @Override
     public Long register(RegisterBookCommand command) {
         validateAdmin(command.memberId(), command.organizationId());
-
+        
         bookRepository.findByIsbn(command.isbn())
         .ifPresent(b -> {
             throw new BookException(ErrorCode.BOOK_ISBN_ALREADY_EXIST);

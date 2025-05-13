@@ -6,6 +6,7 @@ import java.util.Set;
 import com.example.bookservice.application.port.in.Command.RegisterBookCommand;
 import com.example.bookservice.domain.BookCategory;
 import com.example.bookservice.domain.BookStatus;
+import com.example.bookservice.domain.ISBN;
 
 public record RegisterBookRequest (
     Long memberId,
@@ -26,7 +27,7 @@ public record RegisterBookRequest (
         title,
         author,
         publisher,
-        isbn,
+        ISBN.of(isbn),
         LocalDate.parse(publicationDate),
         BookCategory.of(categories),
         BookStatus.valueOf(bookStatus),
