@@ -9,11 +9,12 @@ spring:
       uri: mongodb://mongo:mongo@mongodb:27017
       database: bookquerydb
   kafka:
-    bootstrap-servers: kafka:9092
+    bootstrap-servers: kafka:9092,kafka-2:9093,kafka-3:9094
     consumer:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    properties:
+        spring.json.trusted.packages: com.example.bookservice.domain.event  
 eureka:
   instance:
     prefer-ip-address: true
