@@ -14,7 +14,7 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
     properties:
-        spring.json.trusted.packages: com.example.bookservice.domain.event  
+        spring.json.trusted.packages: com.example.bookqueryservice.application.message 
 eureka:
   instance:
     prefer-ip-address: true
