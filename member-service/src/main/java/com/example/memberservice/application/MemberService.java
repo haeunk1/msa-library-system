@@ -74,7 +74,7 @@ public class MemberService {
             throw new MemberException(ErrorCode.MEMBER_PASSWORD_MISMATCH);
         }
 
-        String token = jwtProvider.generateAccessToken(member.getId(), member.getName());
+        String token = jwtProvider.generateAccessToken(member.getId(), member.getName(), member.getRole());
         return new LoginResponse(token);
     }
 

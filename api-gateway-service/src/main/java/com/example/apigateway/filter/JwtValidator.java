@@ -13,20 +13,34 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
 public class JwtValidator {
-    @Value("${jwt.secret}")
-    private String secret;
 
+    @Value("${jwt.jwtSecret}")
+    private String jwtSecretKey;
+
+    private SecretKey secretKey;
+    
+    @PostConstruct
+    public void init() {
+        byte[] keyBytes = jwtSecretKey.getBytes(StandardCharsets.UTF_8);
+        if (keyBytes.length < 64) {
+            throw new IllegalArgumentException("JWT key must be at least 64 bytes for HS512.");
+        }
+        secretKey = Keys.hmacShaKeyFor(keyBytes);
+    }
     public boolean isValid(String token) {
         try {
             Jwts.parser()
-            .setSigningKey(secret.getBytes(StandardCharsets.UTF_8)).build()
-            .parseClaimsJws(token);//토큰인증이 안됨
+            .setSigningKey(secretKey).build()
+            .parseClaimsJws(token);
+
             return true;
+        
         }catch(JwtException jwtException){
             log.warn("JWT validation error: {}", jwtException.getMessage());
             if (jwtException instanceof ExpiredJwtException) {
@@ -42,7 +56,7 @@ public class JwtValidator {
 
     public Claims getClaims(String token) {
         return Jwts.parser()  
-            .setSigningKey(secret) 
+            .setSigningKey(secretKey) 
             .build()
             .parseClaimsJws(token)
             .getBody();

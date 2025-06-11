@@ -35,7 +35,7 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
     private static final List<String> excludePatterns = List.of(
         "/api/member/login",
         "/api/member/register",
-        "/api/member/**",  // 와일드카드 처리(테스트 위함)
+        //"/api/member/**",
         "/api/book/**"  // 와일드카드 처리(테스트 위함)
     );
 
@@ -46,18 +46,16 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
             String path = exchange.getRequest().getURI().getPath();
 
             // 패턴 매칭을 통한 제외 경로 확인
-            //boolean isExcluded = excludePatterns.stream().anyMatch(pattern -> pathMatcher.match(pattern, path));
             boolean isExcluded = excludePatterns.stream().anyMatch(pattern -> {
                 boolean match = pathMatcher.match(pattern, path);
                 log.info("패턴 검사: 요청 경로 [{}], 비교 패턴 [{}], 결과 [{}]", path, pattern, match);
                 return match;
             });
+
             if (isExcluded) {
                 return chain.filter(exchange);
             }
-            // if (excludePaths.contains(path)) {
-            //     return chain.filter(exchange);
-            // }
+           
             ServerHttpRequest request = exchange.getRequest();
             String authHeader = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
 
@@ -73,12 +71,12 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
                 return onError(exchange, "Invalid token", HttpStatus.UNAUTHORIZED);
             }
 
-            // (선택) 토큰에서 정보 꺼내기 - 나중에 헤더에 추가 가능
+            // 토큰에서 정보 꺼내기 - 나중에 헤더에 추가 가능
             Claims claims = jwtValidator.getClaims(token);
             String memberId = claims.getSubject();
             String role = claims.get("role", String.class);
 
-            // (선택) 요청에 사용자 정보 추가
+            // 요청에 사용자 정보 추가
             ServerHttpRequest mutatedRequest = request.mutate()
                 .header("X-Member-Id", memberId)
                 .header("X-Member-Role", role)

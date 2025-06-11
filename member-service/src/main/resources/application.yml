@@ -15,7 +15,7 @@ spring:
 
 # JWT 설정
 jwt:
-  jwtSecret: vdsf98WEDj2923ksdFWEj239wDEfw293DFWWeijrFwEDjfFWE123123123123123
+  jwtSecret: vdsf98WEDj2923ksdFWEj239wDEfw293DFWWeijrFwEDjfFWE1vdsf98WEDj2923ksdFWEj239wDEfw293DFWWeijrFwEDjfFWE1ABCD1234EFGH5678IJKL9012MNOP3456QRST7890UVWX
   jwtExpirationMs: 3600000 # 1시간 (밀리초 단위)
   jwtRefreshExpirationMs: 86400000 # 24시간 (밀리초 단위)
   refreshTokenDurationMinutes: 1440 # 24시간 (분 단위)
