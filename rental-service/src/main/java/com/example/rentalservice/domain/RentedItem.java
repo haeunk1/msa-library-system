@@ -28,24 +28,20 @@ public class RentedItem implements Serializable{
     @Column(name = "due_date")
     private LocalDate dueDate;
 
-    @Column(name = "book_title")
-    private String bookTitle;
-
     @ManyToOne
     @JsonIgnoreProperties("rentedItems")
     private Rental rental;
 
     protected RentedItem (){}
 
-    public RentedItem(Long bookId, String bookTitle, LocalDate rentedDate, LocalDate dueDate){
+    public RentedItem(Long bookId, LocalDate rentedDate, LocalDate dueDate){
         this.bookId = bookId;
         this.rentedDate = rentedDate;
         this.dueDate = dueDate;
-        this.bookTitle = bookTitle;
     }
 
-    public static RentedItem of(Long bookId, String bookTitle, LocalDate rentedDate) {
-        return new RentedItem(bookId,bookTitle,rentedDate,rentedDate.plusWeeks(2));
+    public static RentedItem of(Long bookId, LocalDate rentedDate) {
+        return new RentedItem(bookId,rentedDate,rentedDate.plusWeeks(2));
     }
 
 }

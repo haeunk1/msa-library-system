@@ -26,22 +26,18 @@ public class ReturnedItem implements Serializable{
     @Column(name = "returned_date")
     private LocalDate returnedDate;
 
-    @Column(name = "book_title")
-    private String bookTitle;
-
     @ManyToOne
     @JsonIgnoreProperties("returnedItems")
     private Rental rental;
 
     protected ReturnedItem(){}
 
-    public ReturnedItem(Long bookId, String bookTitle, LocalDate returnedDate){
+    public ReturnedItem(Long bookId, LocalDate returnedDate){
         this.bookId = bookId;
-        this.bookTitle = bookTitle;
         this.returnedDate = returnedDate;
     }
 
-    public static ReturnedItem of(Long bookId, String bookTitle, LocalDate returnedDate) {
-        return new ReturnedItem(bookId,bookTitle,returnedDate);
+    public static ReturnedItem of(Long bookId, LocalDate returnedDate) {
+        return new ReturnedItem(bookId,returnedDate);
     }
 }
