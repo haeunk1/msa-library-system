@@ -8,7 +8,6 @@ import java.util.Set;
 import org.hibernate.annotations.Cache;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -24,6 +23,9 @@ import com.example.rentalservice.exception.RentUnavailableException;
 @EqualsAndHashCode
 @ToString
 public class Rental implements Serializable{
+
+    private static final int MAX_RENT_LIMIT = 5;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -65,7 +67,8 @@ public class Rental implements Serializable{
 
     /* 반납하기 */
     public Rental returnBook(Long bookId){
-        RentedItem rentedItem = this.rentedItems.stream().filter(item -> item.getBookId().equals(bookId)).findFirst().get();
+        RentedItem rentedItem = this.rentedItems.stream()
+        .filter(item -> item.getBookId().equals(bookId)).findFirst().get();
         this.addReturnedItem(ReturnedItem.of(rentedItem.getBookId(), LocalDate.now()));
         this.removeRentedItem(rentedItem);
         return this;
@@ -103,7 +106,7 @@ public class Rental implements Serializable{
         if(this.rentalStatus.equals(RentalStatus.RENT_UNAVAILABLE)){
             throw new RentUnavailableException("연체 상태입니다. 도서를 대출하실 수 없습니다.");
         }
-        if(this.getRentedItems().size() > 5){
+        if(this.getRentedItems().size() > MAX_RENT_LIMIT){
             throw new RentUnavailableException("대출 가능한 도서의 수는 "+( 5- this.getRentedItems().size())+"권 입니다.");
         }
     }
@@ -130,8 +133,8 @@ public class Rental implements Serializable{
     }
 
     /* 반납 항목 추가 */
-    public Rental addReturnedItem(ReturnedItem returnedItems){
-        this.returnedItems.add(returnedItems);
+    public Rental addReturnedItem(ReturnedItem returnedItem){
+        this.returnedItems.add(returnedItem);
         return this;
     }
     /* 반납 항목 삭제 */
