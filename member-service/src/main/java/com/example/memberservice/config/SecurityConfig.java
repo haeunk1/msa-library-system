@@ -3,11 +3,14 @@ package com.example.memberservice.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.example.memberservice.config.jwt.JwtAuthenticationFilter;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 
 @Configuration
@@ -23,7 +26,16 @@ public class SecurityConfig {
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/api/member/register").permitAll()  // 회원가입 API 인증 없이 허용
                 .requestMatchers("/api/member/login").permitAll()  
-                //.requestMatchers("/", "/api/member", "/api/member/**").permitAll()  // 다른 요청도 인증 없이 허용
+                .requestMatchers("/api/member/**")
+                    .access((authentication, context) -> {
+                        // 헤더 확인해서 내부 요청이면 허용
+                        HttpServletRequest request = context.getRequest();
+                        String internal = request.getHeader("X-Internal-Call");
+                        if ("true".equals(internal)) {
+                            return new AuthorizationDecision(true);
+                        }
+                        return new AuthorizationDecision(authentication.get() != null && authentication.get().isAuthenticated());
+                    })
                 .anyRequest().authenticated()  // 나머지 요청은 인증 필수
             .and()
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class) // JWT 필터 등록

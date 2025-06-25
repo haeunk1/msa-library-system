@@ -34,9 +34,9 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
 
     private static final List<String> excludePatterns = List.of(
         "/api/member/login",
-        "/api/member/register",
+        "/api/member/register"
         //"/api/member/**",
-        "/api/book/**"  // 와일드카드 처리(테스트 위함)
+        //"/api/book/**"  // 와일드카드 처리(테스트 위함)
     );
 
     @Override

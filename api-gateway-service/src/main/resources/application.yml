@@ -13,6 +13,7 @@ spring:
             - Path=/api/member/**
           filters:
             - name: JwtAuthFilter
+            - RemoveRequestHeader=X-Internal-Call
         - id: book-service
           uri: lb://book-service
           predicates:
