@@ -4,34 +4,21 @@ server:
 spring:
   application:
     name: book-query-service
+  profiles:
+    active: dev
   data:
     mongodb:
       uri: mongodb://mongo:mongo@mongodb:27017
       database: bookquerydb
-  kafka:
-    bootstrap-servers: kafka:9092,kafka-2:9093,kafka-3:9094
-    consumer:
-      group-id: bookquery
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-    # properties:
-    #     spring.json.trusted.packages: com.example.bookqueryservice.application.message 
-    properties:
-        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
-        spring.json.trusted.packages: "*"
-        spring.json.type.mapping: com.example.bookservice.domain.event.BookCreatedMessage:com.example.bookqueryservice.application.message.BookCreatedMessage
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
 eureka:
   instance:
     prefer-ip-address: true
   client:
     register-with-eureka: true
     fetch-registry: true
-    serviceUrl:
-      defaultZone: http://discovery-server:8761/eureka
-      #defaultZone: http://localhost:8761/eureka/
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
