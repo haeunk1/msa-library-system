@@ -50,6 +50,9 @@ public class Member {
     @Column(updatable = false)
     private LocalDateTime joinedDate;
 
+    @Column(nullable = false)
+    private int loanCount = 0;
+
     protected Member(){}
 
     public Member(String loginId, String password, Long organizationId, String name, Role role){
@@ -59,6 +62,7 @@ public class Member {
         this.name = name;
         this.blocked = false;
         this.role = role;
+        this.loanCount = 0;
     }
 
     public void changePassword(String currentPw, String newPw){
@@ -79,4 +83,13 @@ public class Member {
         return this.password.isMatch(rawPassword);
     }
 
+    public void increaseLoanCount() {
+        this.loanCount++;
+    }
+
+    public void decreaseLoanCount() {
+        if (this.loanCount > 0) {
+            this.loanCount--;
+        }
+    }
 }
