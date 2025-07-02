@@ -17,7 +17,7 @@ public class RentalTest {
         return Rental.of(1L);
     }
     public RentedItem getRentedItems(Long bookId){
-        return RentedItem.of(bookId,LocalDate.now());
+        return RentedItem.of(bookId);
     }
 
     @Nested

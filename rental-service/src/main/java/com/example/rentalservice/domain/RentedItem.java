@@ -34,14 +34,14 @@ public class RentedItem implements Serializable{
 
     protected RentedItem (){}
 
-    public RentedItem(Long bookId, LocalDate rentedDate, LocalDate dueDate){
+    public RentedItem(Long bookId){
         this.bookId = bookId;
-        this.rentedDate = rentedDate;
-        this.dueDate = dueDate;
+        this.rentedDate = LocalDate.now();
+        this.dueDate = this.rentedDate.plusWeeks(2);
     }
 
-    public static RentedItem of(Long bookId, LocalDate rentedDate) {
-        return new RentedItem(bookId,rentedDate,rentedDate.plusWeeks(2));
+    public static RentedItem of(Long bookId) {
+        return new RentedItem(bookId);
     }
 
 }

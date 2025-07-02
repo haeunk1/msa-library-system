@@ -61,7 +61,7 @@ public class Rental implements Serializable{
     }
     /* 대출하기 */
     public Rental rentBook(Long bookId){
-        this.addRentedItem(RentedItem.of(bookId,LocalDate.now()));
+        this.addRentedItem(RentedItem.of(bookId));
         return this;
     }
 
