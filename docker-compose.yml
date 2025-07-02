@@ -173,18 +173,20 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
 
-  # rental-service:
-  #   build:
-  #     context: ./rental-service
-  #   container_name: rental-service
-  #   ports:
-  #     - "8014:8014"
-  #   depends_on:
-  #     - mysql
-  #     - kafka
-  #     - kafka-2
-  #     - kafka-3
-  #     - discovery-server
+  rental-service:
+    build:
+      context: ./rental-service
+    container_name: rental-service
+    ports:
+      - "8014:8014"
+    depends_on:
+      - mysql
+      - kafka
+      - kafka-2
+      - kafka-3
+      - discovery-server
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
 
 volumes:
   mysql_data:
